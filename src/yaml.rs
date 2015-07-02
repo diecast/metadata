@@ -1,8 +1,5 @@
-use std::error::Error as StdError;
-use std::fmt;
-
 use typemap;
-use yaml_::{Yaml, YamlLoader, ScanError};
+use yaml_::{Yaml, YamlLoader};
 
 use diecast::{self, Item};
 
@@ -19,34 +16,6 @@ impl typemap::Key for Metadata {
     type Value = Yaml;
 }
 
-/// `Yaml` parsing error.
-///
-/// Simply wraps the Yaml `ScanError` into a proper
-/// std `Error`-implementing type
-
-#[derive(Debug)]
-pub struct Error {
-    error: ScanError,
-}
-
-impl StdError for Error {
-    fn description(&self) -> &str {
-        "YAML parsing error"
-    }
-}
-
-impl From<ScanError> for Error {
-    fn from(error: ScanError) -> Error {
-        Error { error: error }
-    }
-}
-
-impl fmt::Display for Error {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        fmt::Debug::fmt(&self.error, f)
-    }
-}
-
 /// Parse YAML metadata into Metadata field
 ///
 /// This puts the parsed `Yaml` in the `Metadata`
@@ -59,7 +28,7 @@ pub fn parse(item: &mut Item) -> diecast::Result<()> {
 
         if !meta.is_empty() {
             let mut parsed =
-                try!(YamlLoader::load_from_str(meta).map_err(Error::from));
+                try!(YamlLoader::load_from_str(meta));
 
             let document = parsed.swap_remove(0);
 
