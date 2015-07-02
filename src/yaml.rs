@@ -19,6 +19,11 @@ impl typemap::Key for Metadata {
     type Value = Yaml;
 }
 
+/// `Yaml` parsing error.
+///
+/// Simply wraps the Yaml `ScanError` into a proper
+/// std `Error`-implementing type
+
 #[derive(Debug)]
 pub struct Error {
     error: ScanError,
