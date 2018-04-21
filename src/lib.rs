@@ -47,13 +47,13 @@ pub fn split(content: &str) -> (&str, &str) {
         caps.name("metadata").map(|meta| {
             // unwrap is safe because pos(0) is the whole capture,
             // and we're only here because there was indeed a capture
-            let (_, end) = caps.pos(0).unwrap();
+            let frontmatter_end = caps.get(0).unwrap().end();
 
             // indexing is safe because regex guarantees that the byte
             // indices it provides fall on character boundaries
-            let body = &content[end ..];
+            let body = &content[frontmatter_end ..];
 
-            (meta, body)
+            (meta.as_str(), body)
         })
     )
     .unwrap_or((&content[0 .. 0], content))
